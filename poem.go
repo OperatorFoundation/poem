@@ -9,7 +9,7 @@ import (
 )
 
 type Query interface {
-	RunWrite(session Session) (*Result, error)
+	RunWrite(session *Session) (*Result, error)
 }
 
 type Session struct {
@@ -46,8 +46,8 @@ type InsertQuery struct {
 	Value interface{}
 }
 
-func Connect(options ConnectOpts) (Session, error) {
-	return Session{}, nil
+func Connect(options ConnectOpts) (*Session, error) {
+	return &Session{}, nil
 }
 
 func DBCreate(db string) Query {
@@ -86,7 +86,7 @@ func (table Table) Insert(value interface{}) Query {
 	return query
 }
 
-func (query DBCreateQuery) RunWrite(session Session) (*Result, error) {
+func (query DBCreateQuery) RunWrite(session *Session) (*Result, error) {
 	createError := os.MkdirAll("poem/"+query.Db, os.ModePerm)
 	if createError != nil {
 		return nil, createError
@@ -95,7 +95,7 @@ func (query DBCreateQuery) RunWrite(session Session) (*Result, error) {
 	return &Result{}, nil
 }
 
-func (query TableCreateQuery) RunWrite(session Session) (*Result, error) {
+func (query TableCreateQuery) RunWrite(session *Session) (*Result, error) {
 	createError := os.MkdirAll("poem/"+query.Db+"/"+query.Table, os.ModePerm)
 	if createError != nil {
 		return nil, createError
@@ -104,7 +104,7 @@ func (query TableCreateQuery) RunWrite(session Session) (*Result, error) {
 	return &Result{}, nil
 }
 
-func (query InsertQuery) RunWrite(session Session) (*Result, error) {
+func (query InsertQuery) RunWrite(session *Session) (*Result, error) {
 	mkdirError := os.MkdirAll("poem/"+query.Db+"/"+query.Table, os.ModePerm)
 	if mkdirError != nil {
 		return nil, mkdirError
