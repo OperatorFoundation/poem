@@ -22,7 +22,7 @@ type ConnectOpts struct {
 type Result struct {
 }
 
-type DB struct {
+type DBQuery struct {
 	Db string
 }
 
@@ -54,7 +54,11 @@ func DBCreate(db string) Query {
 	return DBCreateQuery{Db: db}
 }
 
-func (db DB) TableCreate(table string) Query {
+func DB(db string) DBQuery {
+	return DBQuery{Db:db}
+}
+
+func (db DBQuery) TableCreate(table string) Query {
 	query := TableCreateQuery{
 		Db:    db.Db,
 		Table: table,
@@ -63,7 +67,7 @@ func (db DB) TableCreate(table string) Query {
 	return query
 }
 
-func (db DB) Table(tableName string) Table {
+func (db DBQuery) Table(tableName string) Table {
 	table := Table{
 		Db:    db.Db,
 		Table: tableName,
@@ -72,7 +76,7 @@ func (db DB) Table(tableName string) Table {
 	return table
 }
 
-func (db DB) Dump(destination string) error {
+func (db DBQuery) Dump(destination string) error {
 	return nil
 }
 
